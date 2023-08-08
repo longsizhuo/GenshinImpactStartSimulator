@@ -38,9 +38,6 @@ func (m myTheme) Size(name fyne.ThemeSizeName) float32 {
 	return theme.DefaultTheme().Size(name)
 }
 
-//go:embed source/1.svg
-var _ []byte
-
 func main() {
 	//fmt.Printf("%v", genshinLogo)
 	myApp := app.New()
