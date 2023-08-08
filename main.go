@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "embed"
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
@@ -43,17 +44,32 @@ var _ []byte
 func main() {
 	//fmt.Printf("%v", genshinLogo)
 	myApp := app.New()
+	myApp.Settings().SetTheme(&myTheme{})
 	myWindow := myApp.NewWindow("原神，启动！")
-	myWindow.Resize(fyne.NewSize(365, 280))
-	img := canvas.NewImageFromFile("source/Genshin_Chinese_logo.svg")
-	// TODO:bug: 无法正常显示
+	myWindow.Resize(fyne.NewSize(365*3, 280*3))
+	svgRes, err := fyne.LoadResourceFromPath("source/Genshin_Chinese_logo.svg")
+	if err != nil {
+		fmt.Print(err)
+	}
+	img := canvas.NewImageFromResource(svgRes)
+	// panic: img.FillMode = canvas.ImageFillOriginal // 保持原始大小
+	img.SetMinSize(img.Size()) // 设置最小大小为图像的原始大小
+
+	println(img)
+	// BUG: 无法正常显示
+	img.Resize(fyne.NewSize(365, 280))
+	img.FillMode = canvas.ImageFillContain
 	//img.FillMode = canvas.ImageFillOriginal
+	// 创建一个黑色的矩形
 	rect := canvas.NewRectangle(color.Black)
 	// 创建一个白色容器
 	bg := canvas.NewRectangle(color.White)
-	content := container.NewMax(bg, img)
+	content := container.NewMax(bg, rect, img)
 	go func() {
-		for i := 255; i >= 0; i-- {
+		for i := 0; i <= 255; i++ {
+			if i == 0 {
+				time.Sleep(time.Second * 1)
+			}
 			rect.FillColor = color.NRGBA{R: uint8(i), G: uint8(i), B: uint8(i), A: 255}
 			rect.Refresh()
 			time.Sleep(time.Millisecond * 10)
