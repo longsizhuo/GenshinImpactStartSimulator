@@ -80,6 +80,8 @@ func main() {
 			time.Sleep(time.Millisecond * 20)
 		}
 	}()
+	//
+	content = container.NewPadded(rect, content)
 	content = container.NewMax(content)
 	myWindow.SetContent(content)
 	myWindow.ShowAndRun()
