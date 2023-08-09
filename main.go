@@ -7,9 +7,10 @@ import (
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
+	"fyne.io/fyne/v2/widget"
 	"image/color"
-	"reflect"
 	"time"
 )
 
@@ -60,16 +61,20 @@ func main() {
 	// 创建一个白色容器
 	//bg := canvas.NewRectangle(color.White)
 	//println(bg)
+	//img.Resize(fyne.NewSize(365, 280))
 
-	img.Resize(fyne.NewSize(365, 280))
-	spacer := canvas.NewRectangle(color.Transparent) // 创建一个透明的矩形作为空白填充
-	spacer.Resize(fyne.NewSize(300, 300))
-	println(reflect.TypeOf(spacer).String())
-	// 设置最小高度为50
-	object := fyne.CanvasObject(spacer)
-	println(reflect.TypeOf(spacer).String())
+	// 创建居中的图像，并添加边框
+	label := container.NewCenter(widget.NewLabel("mihuyo澳大利亚科技有限公司"))
+	//box1 := layout.NewHBoxLayout()
+	//var spacer = layout.NewSpacer()
+	//box2 := layout.NewVBoxLayout()
 
-	content := container.NewBorder(object, object, object, object, img)
+	content2 := container.NewMax(img)
+	layout3 := layout.NewGridWrapLayout(fyne.NewSize(365, 280))
+	content3 := container.New(layout3, content2)
+	content4 := container.NewCenter(content3)
+	content5 := container.NewBorder(nil, label, nil, nil, content4)
+	content6 := container.NewMax(rect, content5)
 	go func() {
 		for i := 0; i <= 255; i++ {
 			if i == 0 {
@@ -81,9 +86,7 @@ func main() {
 		}
 	}()
 	//
-	content = container.NewPadded(rect, content)
-	content = container.NewMax(content)
-	myWindow.SetContent(content)
+	myWindow.SetContent(content6)
 	myWindow.ShowAndRun()
 }
 
